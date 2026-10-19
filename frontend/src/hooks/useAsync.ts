@@ -1,0 +1,16 @@
+import { useCallback, useEffect, useState } from "react";
+import { errMsg } from "@/utils/error";
+
+interface AsyncState<T> { data: T | null; loading: boolean; error: string | null }
+
+export function useAsync<T>(fn: () => Promise<T>, deps: unknown[] = []) {
+  const [state, setState] = useState<AsyncState<T>>({ data: null, loading: true, error: null });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const run = useCallback(() => {
+    setState((s) => ({ ...s, loading: true, error: null }));
+    fn().then((data) => setState({ data, loading: false, error: null }))
+      .catch((e: unknown) => setState({ data: null, loading: false, error: errMsg(e) }));
+  }, deps);
+  useEffect(run, [run]);
+  return { ...state, reload: run, setData: (data: T | null) => setState((s) => ({ ...s, data })) };
+}
