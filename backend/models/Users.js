@@ -15,6 +15,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "userId",
         as: "creator"
       })
+      Users.hasOne(models.Agents, {
+        foreignKey: "userId",
+        as: "agentProfile"
+      })
     }
   }
   Users.init({
@@ -29,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
     email: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: trueF
+      unique: true
     },
     password: DataTypes.STRING,
     photo: {

@@ -1,7 +1,6 @@
 const {
   Model
 } = require('sequelize');
-const User = require('./Users');
 module.exports = (sequelize, DataTypes) => {
   class Tickets extends Model {
     /**
@@ -12,9 +11,20 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Tickets.belongsTo(models.Users, {
-        foreignKey: "userId",
-        as: 'user',
+        foreignKey: "customerId",
+        as: 'tickets',
       })
+
+      Tickets.belongsTo(models.Departments, {
+        foreignKey: "department_id",
+        as: "ticket_department"
+      })
+
+      Tickets.hasMany(models.Assignments, {
+        foreignKey: 'ticket_id',
+        as: 'assignments',
+      })
+
 
     }
   }
@@ -25,11 +35,16 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true
     },
-    title: DataTypes.STRING,
-    userId: {
+    subject: DataTypes.STRING,
+    descriptions: DataTypes.STRING,
+    customerId: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
+    department_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    }
   }, {
     sequelize,
     modelName: 'Tickets',

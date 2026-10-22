@@ -1,5 +1,6 @@
     
 from pathlib import Path
+from pydantic import BaseModel, Field, field_validator
 
 import joblib
 from fastapi import FastAPI, HTTPException
@@ -29,11 +30,25 @@ def load_model():
 
 
 class TicketRequest(BaseModel):
-    text: str = Field(
-        min_length=1,
-        max_length=20000,
-        description="Support ticket subject and description",
-    )
+    text: str = Field(min_length=1, max_length=20000)
+
+    @field_validator("text")
+    @classmethod
+    def validate_ticket_text(cls, value: str) -> str:
+        value = value.strip()
+
+        if len(value) < 10:
+            raise ValueError(
+                "Please provide a more descriptive ticket."
+            )
+
+        if len(value.split()) < 3:
+            raise ValueError(
+                "Please provide at least three words."
+            )
+
+        return value
+    
 
 
 class PriorityResponse(BaseModel):

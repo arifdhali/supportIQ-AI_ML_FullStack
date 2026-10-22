@@ -12,11 +12,21 @@ module.exports = {
       title: {
         type: Sequelize.STRING
       },
-      userId: {
+      customerId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: 'Users',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      },
+      department_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Departments',
           key: 'id'
         },
         onUpdate: 'CASCADE',
