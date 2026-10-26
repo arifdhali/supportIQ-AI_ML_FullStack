@@ -148,25 +148,86 @@ print("Final test weighted F1:",
 print("Final test macro F1:",
       round(f1_score(y_test, test_predictions, average="macro"), 4))
 
-print("\nFinal classification report:")
-print(classification_report(
-    y_test, test_predictions, zero_division=0
-))
+# print("\nFinal classification report:")
+# print(classification_report(
+#     y_test, test_predictions, zero_division=0
+# ))
 
-# 7. Save the complete model artifact
-supportiq_model = {
-    "tfidf": final_tfidf,
-    "classifier": final_model,
-    "target_name": "priority",
-    "classes": final_model.classes_.tolist(),
-    "model_name": "LinearSVC",
-    "C": float(best_c),
-    "features": "word_and_character_tfidf"
-}
 
-joblib.dump(
-    supportiq_model,
-    "supportiq_priority_model.joblib"
+# C.1 — Classification report -- start
+# report = classification_report(
+#     y_test,
+#     test_predictions,
+#     output_dict=True,
+#     zero_division=0
+# )
+
+# report_df = pd.DataFrame(report).transpose()
+
+# print("\nClassification Report:")
+# print(report_df.round(4))
+
+# report_df.to_csv("supportiq_classification_report.csv")
+
+# print("Classification report saved successfully!")
+
+# classification end ----
+
+# confusion matrix --- start
+
+
+import matplotlib.pyplot as plt
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+
+labels = list(final_model.classes_)
+
+cm = confusion_matrix(
+    y_test,
+    test_predictions,
+    labels=labels
 )
 
-print("\nSupportIQ priority model saved successfully!")
+print("\nConfusion Matrix:")
+print(pd.DataFrame(
+    cm,
+    index=[f"Actual {label}" for label in labels],
+    columns=[f"Predicted {label}" for label in labels]
+))
+
+display = ConfusionMatrixDisplay(
+    confusion_matrix=cm,
+    display_labels=labels
+)
+
+display.plot(values_format="d")
+plt.title("SupportIQ Priority Classification")
+plt.tight_layout()
+
+plt.savefig(
+    "supportiq_confusion_matrix.png",
+    dpi=300,
+    bbox_inches="tight"
+)
+
+plt.show()
+
+print("Confusion matrix image saved successfully!")
+
+
+# # 7. Save the complete model artifact
+# supportiq_model = {
+#     "tfidf": final_tfidf,
+#     "classifier": final_model,
+#     "target_name": "priority",
+#     "classes": final_model.classes_.tolist(),
+#     "model_name": "LinearSVC",
+#     "C": float(best_c),
+#     "features": "word_and_character_tfidf"
+# }
+
+# joblib.dump(
+#     supportiq_model,
+#     "supportiq_priority_model.joblib"
+# )
+
+# print("\nSupportIQ priority model saved successfully!")

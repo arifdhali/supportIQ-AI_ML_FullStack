@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Users.hasMany(models.tickets, {
+      Users.hasMany(models.Tickets, {
         foreignKey: "userId",
         as: "creator"
       })
@@ -35,7 +35,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true
     },
-    password: DataTypes.STRING,
     photo: {
       type: DataTypes.STRING,
       defaultValue: null
@@ -43,6 +42,15 @@ module.exports = (sequelize, DataTypes) => {
     roles: {
       type: DataTypes.ENUM('user', 'agent', 'admin'),
       defaultValue: "user"
+    },
+    status: {
+      allowNull: false,
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
+    password: {
+      type: DataTypes.STRING,
+      defaultValue: null,
     }
   }, {
     sequelize,

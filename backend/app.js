@@ -9,18 +9,20 @@ require("dotenv").config();
 app.use(cors());
 app.use(express.json());
 app.use(helmet());
-
+app.use(express.urlencoded({ extended: true }));
 
 
 
 
 app.use("/api", api)
 
-app.use((req, res, next, error) => {
-    res.status(500).json({
-        message: error.message
+app.use((error, req, res, next) => {
+    const statusCode = error.status || 500;
+
+    res.status(statusCode).json({
+        success: false,
+        message: error.message ||  "Internal issue"
     })
-    next(error)
 })
 
 
