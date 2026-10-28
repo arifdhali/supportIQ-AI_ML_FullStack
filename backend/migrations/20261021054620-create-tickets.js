@@ -9,9 +9,8 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      title: {
-        type: Sequelize.STRING
-      },
+      subject: Sequelize.STRING,
+      descriptions: Sequelize.STRING,
       customerId: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -31,6 +30,11 @@ module.exports = {
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
+      },
+      status: {
+        type: Sequelize.ENUM("progress", "pending", "resolved"),
+        defaultValue: "pending",
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

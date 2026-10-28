@@ -1,8 +1,7 @@
+const { createTicket } = require("../controllers/users.controller");
+
 const userRoute = require("express").Router();
 
+userRoute.post("/create-ticket",createTicket)
 
-// userRoute.get("/login", (req, res) => { 
-//     res.send("login route")
-// })
-
-// module.exports = userRoute;
+module.exports = userRoute;

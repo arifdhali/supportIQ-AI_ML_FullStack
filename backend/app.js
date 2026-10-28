@@ -4,7 +4,9 @@ const api = require('./routes/index.route');
 const PORT = process.env.PORT || 3000;
 const cors = require('cors');
 const helmet = require("helmet");
+const db = require("./models/index.js")
 require("dotenv").config();
+
 
 app.use(cors());
 app.use(express.json());
@@ -21,14 +23,27 @@ app.use((error, req, res, next) => {
 
     res.status(statusCode).json({
         success: false,
-        message: error.message ||  "Internal issue"
+        message: error.message || "Internal issue"
     })
 })
 
 
-app.listen(PORT, (error) => {
-    if (error) {
-        process.exit(1);
+async function bootstrap() {
+    try {
+        await db.sequelize.authenticate();
+        console.log("Database connected successfully!");
+
+        app.listen(PORT, (error) => {
+            if (error) {
+                process.exit(1);
+            }
+            console.log(`Server is running at http://localhost:${PORT}`)
+        })
+    } catch (err) {
+        console.log(err)
+        process.exit(1)
     }
-    console.log(`Server is running at http://localhost:${PORT}`)
-})
+}
+
+bootstrap();
+

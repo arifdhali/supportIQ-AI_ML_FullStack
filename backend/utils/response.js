@@ -18,4 +18,4 @@ const error = (res, errors = [], message = "error", statusCode = 500) => {
 
 }
 
-module.export = { success, error };
+module.exports = { success, error };

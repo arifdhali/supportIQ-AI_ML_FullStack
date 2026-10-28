@@ -44,7 +44,12 @@ module.exports = (sequelize, DataTypes) => {
     department_id: {
       type: DataTypes.INTEGER,
       allowNull: false
-    }
+    },
+    status: {
+      type: DataTypes.ENUM("progress", "pending", "resolved"),
+      defaultValue: "pending",
+      allowNull: false
+    },
   }, {
     sequelize,
     modelName: 'Tickets',
